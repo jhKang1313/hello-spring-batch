@@ -1,0 +1,28 @@
+spring:
+  profiles:
+    active: local
+  batch:
+    job:
+      names: ${job.name:NONE}
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:mysql://jhkang1313.iptime.org:13306/kang
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl_auto: none
+
+  batch:
+    jdbc:
+      initialize-schema: ALWAYS
