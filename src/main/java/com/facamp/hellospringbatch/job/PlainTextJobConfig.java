@@ -1,7 +1,9 @@
 package com.facamp.hellospringbatch.job;
 
 import com.facamp.hellospringbatch.core.domain.PlainText;
+import com.facamp.hellospringbatch.core.domain.ResultText;
 import com.facamp.hellospringbatch.core.repository.PlainTextRepository;
+import com.facamp.hellospringbatch.core.repository.ResultTextRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -32,6 +34,7 @@ public class PlainTextJobConfig {
   private final StepBuilderFactory stepBuilderFactory;
 
   private final PlainTextRepository plainTextRepository;
+  private final ResultTextRepository resultTextRepository;
   @Bean("plainTextJob")
   public Job plainTextJob(Step plainTextStep) {
     return jobBuilderFactory.get("plainTextJob")
@@ -74,7 +77,7 @@ public class PlainTextJobConfig {
   @Bean
   public ItemWriter<String> plainTextWriter(){
     return items -> {
-      items.forEach(System.out::println);
+      items.forEach(item -> resultTextRepository.save(new ResultText(null, item)));
       System.out.println("---- chunk is finished -----");
     };
   }

@@ -27,3 +27,10 @@ spring:
   batch:
     jdbc:
       initialize-schema: ALWAYS
+---
+spring:
+  config:
+    activate:
+      on-profile: text
+  jpa:
+    database: h2
