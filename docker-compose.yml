@@ -7,7 +7,7 @@ services:
     environment:
       MYSQL_ROOT_HOST: 'jhkang1313.iptime.org'
       MYSQL_USER: "root"
-
+      MYSQL_PASSWORD: "qwer1234!"
       MYSQL_DATABASE: "kang"
     ports:
       - "13306:13306"
