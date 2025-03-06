@@ -54,15 +54,34 @@ public class AdvancedJobConfig {
           log.info("[JobExecutionListener] afterJob is Failed");  // 실패일때 별도 처리
           // Notification Service
         }
+      }
+    };
+  }
 
+  @Bean
+  @StepScope
+  public StepExecutionListener stepExecutionListener() {
+    return new StepExecutionListener() {
+
+      @Override
+      public void beforeStep(StepExecution stepExecution) {
+        log.info("[StepExecutionListener] beforeStep is " + stepExecution.getStatus());
+      }
+
+      @Override
+      public ExitStatus afterStep(StepExecution stepExecution) {
+        log.info("[StepExecutionListener] afterStep is " + stepExecution.getStatus());
+        return stepExecution.getExitStatus();
       }
     };
   }
 
   @JobScope
   @Bean("advancedStep")
-  public Step advancedStep(Tasklet advancedTasklet){
+  public Step advancedStep(Tasklet advancedTasklet,
+                           StepExecutionListener stepExecutionListener){
     return stepBuilderFactory.get("advancedStep")
+        .listener(stepExecutionListener)
         .tasklet(advancedTasklet)
         .build();
   }
