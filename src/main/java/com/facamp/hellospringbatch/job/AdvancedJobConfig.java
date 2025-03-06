@@ -6,8 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.internal.build.AllowPrintStacktrace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
+import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -30,12 +29,34 @@ public class AdvancedJobConfig {
   private final StepBuilderFactory stepBuilderFactory;
 
   @Bean("advancedJob")
-  public Job advancedJob(Step advancedStep){
+  public Job advancedJob(Step advancedStep,
+                         JobExecutionListener jobExecutionListener){
     return jobBuilderFactory.get("advancedJob")
         .incrementer(new RunIdIncrementer())
         .validator(new LocalDateParameterValidator("targetDate"))
+        .listener(jobExecutionListener)
         .start(advancedStep)
         .build();
+  }
+  @JobScope
+  @Bean
+  public JobExecutionListener jobExecutionListener() {
+    return new JobExecutionListener() {
+
+      @Override
+      public void beforeJob(JobExecution jobExecution) {
+        log.info("[JobExecutionListener] beforeJob is " + jobExecution.getStatus());
+      }
+
+      @Override
+      public void afterJob(JobExecution jobExecution) {
+        if(jobExecution.getStatus() == BatchStatus.FAILED){
+          log.info("[JobExecutionListener] afterJob is Failed");  // 실패일때 별도 처리
+          // Notification Service
+        }
+
+      }
+    };
   }
 
   @JobScope
