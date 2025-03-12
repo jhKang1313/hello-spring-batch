@@ -22,4 +22,7 @@ public class PlainText {
 
   @Column(nullable = false)
   private String text;
+
+  @Column(name = "rflt_yn")
+  private String rfltYn;
 }
