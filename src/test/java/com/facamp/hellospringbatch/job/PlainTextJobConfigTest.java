@@ -70,7 +70,7 @@ public class PlainTextJobConfigTest {
 
   private void givenPlainText(Integer count){
     IntStream.range(0, count).forEach(
-        item -> plainTextRepository.save(new PlainText(null, "text" + item))
+        item -> plainTextRepository.save(new PlainText(null, "text" + item, "N"))
     );
   }
 }
